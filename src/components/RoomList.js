@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
+import MessageList from './MessageList';
 
 class RoomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       rooms: [],
-      newRoomName:''
+      newRoomName: '',
     };
     this.roomsRef = this.props.firebase.database().ref('rooms');
     this.onChange = this.onChange.bind(this);
     this.handleClickSubmit = this.handleClickSubmit.bind(this);
+    this.handleRoomClick = this.handleRoomClick.bind(this);
   }
 
   componentDidMount() {
@@ -30,18 +32,23 @@ class RoomList extends Component {
     );
   }
 
+  handleRoomClick(room) {
+    this.props.setActiveRoom(room);
+  }
+
   render() {
     return (
       <section className='RoomList'>
         <ul>
           {
             this.state.rooms.map((room) =>
-              <li key={room.key}>{room.name}</li>
+              <li key={room.key} onClick={() => this.handleRoomClick(room)} >{room.name}</li>
             )
           }
         </ul>
 
         <button type="button" data-toggle="modal" data-target="#myModal">Create Room</button>
+
         <div className="modal" id="myModal">
           <div className="modal-dialog">
             <div className="modal-content">
@@ -63,6 +70,7 @@ class RoomList extends Component {
             </div>
           </div>
         </div>
+
       </section>
     );
   }
